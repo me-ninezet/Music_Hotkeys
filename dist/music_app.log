@@ -1,0 +1,23 @@
+2025-08-28 06:43:50,915 - INFO - Offline resources: C:\Users\shmel\AppData\Local\Temp\_MEI31122\flet_resources
+2025-08-28 06:43:50,915 - INFO - Config created
+2025-08-28 06:43:50,915 - INFO - Hotkeys removed
+2025-08-28 06:43:50,933 - INFO - Trey icon started
+2025-08-28 06:43:51,067 - INFO - GUI Started
+2025-08-28 06:43:51,070 - INFO - Assets path configured: C:\Users\shmel\AppData\Local\Temp\_MEI31122\flet_resources
+2025-08-28 06:43:51,074 - INFO - Starting up TCP server on localhost:23155
+2025-08-28 06:43:51,087 - INFO - Flet app has started...
+2025-08-28 06:43:51,090 - INFO - App URL: tcp://localhost:23155
+2025-08-28 06:43:51,091 - INFO - Starting Flet View app...
+2025-08-28 06:43:51,091 - INFO - Looking for Flet executable at: C:\Users\shmel\AppData\Local\Temp\_MEI31122\flet_desktop\app\flet\flet.exe
+2025-08-28 06:43:51,111 - INFO - Hotkeys setup completed
+2025-08-28 06:43:51,111 - INFO - Program started
+2025-08-28 06:43:51,431 - INFO - App session started
+2025-08-28 06:43:51,431 - INFO - Offline resources: C:\Users\shmel\AppData\Local\Temp\_MEI31122\flet_resources
+2025-08-28 06:43:51,436 - INFO - GUI started
+2025-08-28 07:46:27,079 - INFO - Clean exit from app...
+2025-08-28 07:46:27,087 - INFO - Start clean exit
+2025-08-28 07:46:27,088 - INFO - Stop signal sent
+2025-08-28 07:46:27,188 - INFO - Hotkeys removed
+2025-08-28 07:46:27,188 - INFO - Program stopped
+2025-08-28 07:46:27,189 - INFO - Garbage collection completed
+2025-08-28 07:46:27,189 - INFO - App closed
