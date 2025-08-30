@@ -3726,4 +3726,10 @@
    'PYMODULE'),
   ('zoneinfo._zoneinfo',
    'C:\\Users\\shmel\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\zoneinfo\\_zoneinfo.py',
+   'PYMODULE'),
+  ('zstandard',
+   'C:\\Users\\shmel\\PycharmProjects\\yandex-music-hotkeys\\.venv\\Lib\\site-packages\\zstandard\\__init__.py',
+   'PYMODULE'),
+  ('zstandard.backend_cffi',
+   'C:\\Users\\shmel\\PycharmProjects\\yandex-music-hotkeys\\.venv\\Lib\\site-packages\\zstandard\\backend_cffi.py',
    'PYMODULE')])

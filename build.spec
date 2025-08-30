@@ -3,14 +3,13 @@
 block_cipher = None
 
 a = Analysis(
-    ['main.py'],  # главный файл вашего приложения
-    pathex=[],  # пути к дополнительным модулям
+    ['main.py'],
+    pathex=[],
     binaries=[],
     datas=[
         ('config.txt', '.'),
         ('flet_resources/*', 'flet_resources'),
-        ('flet_resources/assets/*', 'flet_resources/assets'),
-        ('*.log', '.')
+        ('flet_resources/assets/*', 'flet_resources/assets')
     ],
     hiddenimports=[
         'pystray',
@@ -45,11 +44,11 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='MusicHotkeys',  # имя исполняемого файла
-    debug=False,  # отладка
+    name='MusicHotkeys',
+    debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=True,  # сжатие
+    upx=False,  # сжатие
     upx_exclude=[],
     runtime_tmpdir=None,
     console=False,  # FALSE - скрыть консоль, TRUE - показать

@@ -4,15 +4,20 @@ from pyautogui import press
 from keyboard import add_hotkey, remove_hotkey
 from os.path import dirname, join, abspath
 import logging
+import os
+import sys
 
 hotkeys = {}
 '''Finding a config path'''
 def get_config_path():
-    script_dir = dirname(abspath(__file__))
-    config_path = join(script_dir, "config.txt")
-    if not abspath(config_path).startswith(abspath(script_dir)):
-        logging.error("Invalid config path!")
-        return None
+    if hasattr(sys, '_MEIPASS'):
+        config_path = os.path.join(sys._MEIPASS, "config.txt")
+    else:
+        script_dir = dirname(abspath(__file__))
+        config_path = join(script_dir, "config.txt")
+        if not abspath(config_path).startswith(abspath(script_dir)):
+            logging.error("Invalid config path!")
+            return None
     return config_path
 
 '''

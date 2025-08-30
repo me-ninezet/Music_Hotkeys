@@ -1,7 +1,7 @@
 import logging
 import flet as ft
 from flet.core.types import MainAxisAlignment
-from hotkeys import hotkeys, inic_cfg, restart_controller
+from hotkeys import hotkeys, inic_cfg, restart_controller, get_config_path
 global_app = None
 
 
@@ -17,7 +17,7 @@ def set_global_app(app):
 
 def change_cfg(action, new_key, act, page):
     logging.info('Changing cfg')
-    with open("config.txt", "r") as file:
+    with open(get_config_path(), "r") as file:
         lines = file.readlines()
 
     new_lines = []
@@ -32,7 +32,7 @@ def change_cfg(action, new_key, act, page):
             new_lines.append(line)
 
 
-    with open("config.txt", "w") as file:
+    with open(get_config_path(), "w") as file:
         file.writelines(new_lines)
 
 
