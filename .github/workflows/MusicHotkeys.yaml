@@ -90,5 +90,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: MusicHotkeys
-        path: build/windows/runner/Release/MusicHotkeys.exe
+        path: build\windows\x64\runner\Release\music_hotkeys.exe
+
 
