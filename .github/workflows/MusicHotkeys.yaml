@@ -44,7 +44,7 @@ jobs:
 
     - name: Build final version (without console)
       run: |
-        pyinstaller MusicHotkeys_temp.spec --clean --noconfirm
+        pyinstaller MusicHotkeys.spec --clean --noconfirm
 
     - name: Upload executable artifact
       uses: actions/upload-artifact@v4

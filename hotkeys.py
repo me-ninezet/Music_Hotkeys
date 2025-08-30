@@ -8,10 +8,19 @@ import os
 import sys
 
 hotkeys = {}
+default_config = '''next=pageup
+    prev=pagedown
+    pause=home
+    mute=end
+    volume_down=ins
+    volume_up=del'''
 '''Finding a config path'''
 def get_config_path():
     if hasattr(sys, '_MEIPASS'):
         config_path = os.path.join(sys._MEIPASS, "config.txt")
+        if not os.path.exists(config_path):
+            with open(config_path, 'w', encoding='utf-8') as f:
+                f.write(default_config)
         logging.INFO('Config path finded!!')
     else:
         script_dir = dirname(abspath(__file__))
