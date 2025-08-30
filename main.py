@@ -1,6 +1,6 @@
 import logging
 import flet as ft
-from hotkeys import start_controller, stop_controller, get_config_path
+from hotkeys import start_controller, stop_controller, get_config_path, inic_cfg
 from design import design
 from tray_manager import TrayIconManager
 from pathlib import Path
@@ -149,6 +149,7 @@ class MusicApp:
 
         try:
             # Start media controller
+            inic_cfg()
             controller_thread = self.start_controller()
             resources_path = self.setup_offline_mode()
             # Start trey
@@ -185,7 +186,7 @@ class MusicApp:
 
         # Exit
         logging.info("App closed")
-        os._exit(0)  # Forced exit
+        sys.exit(0)  # Forced exit
 
 
     def close_processes(self):

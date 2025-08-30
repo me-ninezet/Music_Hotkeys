@@ -7,25 +7,25 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-    ('config.txt', '.'),
-    ('flet_resources', 'flet_resources'),
+        ('config.txt', '.'),
+        ('flet_resources/*', 'flet_resources'),
+        ('flet_resources/assets/*', 'flet_resources/assets')
     ],
-
     hiddenimports=[
-    'pystray',
-    'PIL',
-    'keyboard',
-    'pyautogui',
-    'flet',
-    'flet.core',
-    'flet.utils',
-    'logging',
-    'threading',
-    'time',
-    'os',
-    'sys',
-    'gc',
-    'pathlib'
+        'pystray',
+        'PIL',
+        'keyboard',
+        'pyautogui',
+        'flet',
+        'flet.core',
+        'flet.utils'
+        'logging',
+        'threading',
+        'time',
+        'os',
+        'sys',
+        'gc',
+        'pathlib'
     ],
     hookspath=[],
     hooksconfig={},

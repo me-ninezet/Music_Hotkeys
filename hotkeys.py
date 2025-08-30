@@ -19,28 +19,30 @@ default_config = '''next=pageup
 def create_cfg_if_not_exist():
     try:
         logging.info('creating default cfg')
-        if hasattr(sys, '_MEIPASS'):
-            config_path = os.path.join(sys._MEIPASS, "config.txt")
-            if not os.path.exists(config_path):
-                with open(config_path, 'w', encoding='utf-8') as f:
-                    f.write(default_config)
+        config_path = get_config_path()
+        if not os.path.exists(config_path):
+            with open(config_path, 'w', encoding='utf-8') as f:
+                f.write(default_config)
+            logging.info('Default config created')
     except Exception as ex:
         logging.error(f'cant create default cfg: {ex}')
 
 
 '''Finding a config path'''
+
+
 def get_config_path():
-    logging.INFO("getting path")
+    logging.info("getting path")
     if hasattr(sys, '_MEIPASS'):
+        # В режиме PyInstaller
         config_path = os.path.join(sys._MEIPASS, "config.txt")
-        logging.INFO('Config path finded!!')
+        logging.info('Config path in MEIPASS: %s', config_path)
     else:
+        # В режиме разработки
         script_dir = dirname(abspath(__file__))
         config_path = join(script_dir, "config.txt")
-        logging.INFO('Config path NOT finded!!')
-        if not abspath(config_path).startswith(abspath(script_dir)):
-            logging.error("Invalid config path!")
-            return None
+        logging.info('Config path in script dir: %s', config_path)
+
     return config_path
 
 '''
@@ -56,7 +58,11 @@ Config file format (default keys):
 '''
 
 def inic_cfg():
-
+    config_path = get_config_path()
+    logging.info('Loading config from: %s', config_path)
+    if not os.path.exists(config_path):
+        logging.warning('Config file not found, creating default')
+        create_cfg_if_not_exist()
     try:
         with open(get_config_path(), "r") as f:
             for line in f:
@@ -67,8 +73,15 @@ def inic_cfg():
         logging.info('Config created')
     except Exception as ex:
         logging.error(ex)
-        logging.error("Cant create cfg")
-
+        logging.error("Cant create cfg, adding default")
+        hotkeys.update({
+            'next': 'pageup',
+            'prev': 'pagedown',
+            'pause': 'home',
+            'mute': 'end',
+            'volume_down': 'ins',
+            'volume_up': 'del'
+        })
 
 '''
 Media hotkeys controller for Yandex Music (or other media players).
