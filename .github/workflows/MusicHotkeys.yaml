@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.12.3'
 
     - name: Install dependencies
       run: |
@@ -50,6 +50,7 @@ jobs:
           --hidden-import=flet.utils `
           --hidden-import=logging `
           --hidden-import=threading `
+          --hidden-import=flet-desktop `
           --clean `
           main.py
 
@@ -69,3 +70,4 @@ jobs:
       with:
         name: MusicHotkeys-Executable
         path: dist/MusicHotkeys.exe
+
