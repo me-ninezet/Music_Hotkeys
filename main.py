@@ -172,7 +172,7 @@ class MusicApp:
             # Start GUI in main thread
             logging.info("GUI Started")
             ft.app(target=self.design_wrapper,
-                   assets_dir=self.get_resources_path,
+                   assets_dir=self.setup_offline_mode(),
                    use_color_emoji=False)
 
         except KeyboardInterrupt:
