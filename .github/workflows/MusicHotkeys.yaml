@@ -1,4 +1,4 @@
-name: Build with Flet Pack
+name: Build MusicHotkeys
 
 on:
   push:
@@ -13,18 +13,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
+    - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
-    - name: Install Flet
-      run: |
-        pip install flet
-
     - name: Install dependencies
       run: |
-        pip install pystray pillow keyboard pyautogui pyinstaller
+        pip install flet pystray pillow keyboard pyautogui pyinstaller
 
     - name: Create default config
       run: |
@@ -35,21 +31,16 @@ jobs:
         echo "volume_down=ins" >> config.txt
         echo "volume_up=del" >> config.txt
 
-    - name: Build with Flet Pack
+    - name: Export spec and build
       run: |
-        flet pack main.py --yes --product-name "Music Hotkeys Controller" --product-version "1.0.0" --add-data "config.txt;." --add-data "flet_resources;flet_resources"
+        # Экспортируем spec файл
+        flet pack main.py --name MusicHotkeys --export-spec-only
+        
+        # Собираем используя spec
+        pyinstaller MusicHotkeys.spec --clean --noconfirm
 
-    - name: Upload artifact
+    - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
-        name: MusicHotkeys-FletPack
-
-        path: Music_Hotkeys/dist/MusicHotkeys.exe
-
-
-
-
-
-
-
-
+        name: MusicHotkeys-Executable
+        path: dist/MusicHotkeys.exe
