@@ -1,8 +1,8 @@
-name: Build Windows Executable
+name: Build with Flet Pack
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   workflow_dispatch:
 
 jobs:
@@ -13,19 +13,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python 3.10
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12.3'
+        python-version: '3.10'
+
+    - name: Install Flet
+      run: |
+        pip install flet
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller pystray pillow keyboard pyautogui flet
+        pip install pystray pillow keyboard pyautogui
 
     - name: Create default config
       run: |
-        # Создаем дефолтный конфиг
         echo "next=pageup" > config.txt
         echo "prev=pagedown" >> config.txt
         echo "pause=home" >> config.txt
@@ -33,12 +35,27 @@ jobs:
         echo "volume_down=ins" >> config.txt
         echo "volume_up=del" >> config.txt
 
-    - name: Build with PyInstaller
+    - name: Build with Flet Pack
       run: |
-        pyinstaller MusicHotkeys.spec --clean --noconfirm
+        flet pack main.py --name MusicHotkeys --product-name "Music Hotkeys" --product-version "1.0.0" --console false
 
-    - name: Upload executable artifact
+    - name: Check executable
+      run: |
+        $exePath = "dist/MusicHotkeys.exe"
+        if (Test-Path $exePath) {
+            $size = (Get-Item $exePath).Length
+            Write-Output "Executable size: $($size/1MB) MB"
+            if ($size -lt 20MB) {
+                Write-Output "⚠️  Executable might be missing dependencies"
+            }
+        } else {
+            Write-Output "❌ Executable not found"
+            Get-ChildItem -Recurse
+            exit 1
+        }
+
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MusicHotkeys-Executable
-        path: dist/
+        name: MusicHotkeys-FletPack
+        path: dist/MusicHotkeys.exe

@@ -1,6 +1,6 @@
 import logging
 import flet as ft
-from PyInstaller.utils.win32.winresource import get_resources
+
 
 from hotkeys import start_controller, stop_controller, get_config_path, inic_cfg
 from design import design
@@ -197,7 +197,7 @@ class MusicApp:
 
         # Exit
         logging.info("App closed")
-        sys.exit(0)  # Forced exit
+        os._exit(0)  # Forced exit
 
 
     def close_processes(self):
