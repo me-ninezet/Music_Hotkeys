@@ -13,33 +13,101 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Python
+    - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
     - name: Install dependencies
       run: |
+        python -m pip install --upgrade pip
         pip install flet pystray pillow keyboard pyautogui
 
-    - name: Build application
+    - name: Create config files with proper encoding
       run: |
-        flet build windows
+        # Создаем config.txt с UTF-8 encoding
+        $configContent = @"
+next=pageup
+prev=pagedown
+pause=home
+mute=end
+volume_down=ins
+volume_up=del
+"@
+        [System.IO.File]::WriteAllText("config.txt", $configContent, [System.Text.Encoding]::UTF8)
 
-    - name: Prepare artifact
+        # Создаем flet.toml с UTF-8 encoding
+        $tomlContent = @"
+[project]
+name = "musichotkeys"
+version = "1.0.0"
+dependencies = ["flet", "pystray", "pillow", "keyboard", "pyautogui"]
+
+[tool.flet]
+product = "MusicHotkeys"
+
+[tool.flet.app]
+path = "."
+"@
+        [System.IO.File]::WriteAllText("flet.toml", $tomlContent, [System.Text.Encoding]::UTF8)
+
+    - name: Verify files were created
       run: |
-        if (Test-Path "build/windows/runner/Release/MusicHotkeys.exe") {
-            New-Item -ItemType Directory -Path "dist" -Force
-            Copy-Item -Path "build/windows/runner/Release/MusicHotkeys.exe" -Destination "dist/"
-            Write-Output " Build successful"
+        if (Test-Path "config.txt") {
+            Write-Output "✅ config.txt created successfully"
+            Get-Content "config.txt" -Encoding UTF8
         } else {
-            Write-Output " Build failed"
+            Write-Output "❌ config.txt not found"
+            exit 1
+        }
+        
+        if (Test-Path "flet.toml") {
+            Write-Output "✅ flet.toml created successfully"
+            Get-Content "flet.toml" -Encoding UTF8
+        } else {
+            Write-Output "❌ flet.toml not found"
             exit 1
         }
 
-    - name: Upload executable
+    - name: Build with Flet
+      run: |
+        # Устанавливаем UTF-8 кодировку для всего процесса
+        $env:PYTHONIOENCODING = "utf-8"
+        $env:PYTHONUTF8 = "1"
+        flet build windows
+
+    - name: Check build result
+      run: |
+        # Проверяем различные возможные пути к исполняемому файлу
+        $possiblePaths = @(
+            "build/windows/runner/Release/MusicHotkeys.exe",
+            "build/MusicHotkeys.exe", 
+            "MusicHotkeys.exe"
+        )
+        
+        $found = $false
+        foreach ($path in $possiblePaths) {
+            if (Test-Path $path) {
+                Write-Output "✅ Found executable: $path"
+                $size = (Get-Item $path).Length / 1MB
+                Write-Output "Size: $([math]::Round($size, 2)) MB"
+                
+                # Создаем папку dist и копируем туда
+                New-Item -ItemType Directory -Path "dist" -Force
+                Copy-Item -Path $path -Destination "dist/MusicHotkeys.exe"
+                $found = $true
+                break
+            }
+        }
+        
+        if (-not $found) {
+            Write-Output "❌ Executable not found. Directory contents:"
+            Get-ChildItem -Recurse | Format-Table Name, Length
+            exit 1
+        }
+
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: MusicHotkeys
         path: dist/MusicHotkeys.exe
-
