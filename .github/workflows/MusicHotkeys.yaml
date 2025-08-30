@@ -42,28 +42,8 @@ jobs:
         if (-not (Test-Path config.txt)) { Write-Output "❌ config.txt not found!"; exit 1 }
         if (-not (Test-Path flet_resources)) { Write-Output "❌ flet_resources folder not found!"; exit 1 }
 
-    - name: Build with PyInstaller (debug mode)
-      run: |
-        # Сначала соберем с консолью для отладки
-        pyinstaller MusicHotkeys.spec --clean --noconfirm --debug=all
-
-    - name: Test the executable
-      run: |
-        $exePath = "dist/MusicHotkeys.exe"
-        if (Test-Path $exePath) {
-            Write-Output "✅ Executable created, testing..."
-            # Запускаем с таймаутом для проверки ошибок
-            $process = Start-Process -FilePath $exePath -Wait -PassThru -NoNewWindow
-            Write-Output "Exit code: $($process.ExitCode)"
-        } else {
-            Write-Output "❌ Executable not found!"
-            exit 1
-        }
-
     - name: Build final version (without console)
       run: |
-        # Меняем консоль на False в spec файле временно
-        (Get-Content MusicHotkeys.spec) -replace "console=True", "console=False" | Set-Content MusicHotkeys_temp.spec
         pyinstaller MusicHotkeys_temp.spec --clean --noconfirm
         Remove-Item MusicHotkeys_temp.spec
 
