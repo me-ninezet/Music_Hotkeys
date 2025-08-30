@@ -1,0 +1,76 @@
+name: Build Windows Executable
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller pystray pillow keyboard pyautogui flet
+
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller MusicHotkeys.spec --clean --noconfirm
+
+    - name: Verify executable
+      run: |
+        $exePath = "dist/MusicHotkeys.exe"
+        if (Test-Path $exePath) {
+            $file = Get-Item $exePath
+            $size = [math]::Round($file.Length / 1MB, 2)
+            Write-Output "✅ Executable created successfully"
+            Write-Output "📦 File size: $size MB"
+            Write-Output "📁 Location: $($file.FullName)"
+        } else {
+            Write-Output "❌ Executable not found!"
+            Get-ChildItem -Recurse | Where-Object { $_.Name -like "*.exe" } | ForEach-Object { Write-Output "Found: $($_.FullName)" }
+            exit 1
+        }
+
+    - name: Upload executable artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MusicHotkeys-Executable
+        path: dist/MusicHotkeys.exe
+        if-no-files-found: error
+        retention-days: 7
+
+  create-release:
+    needs: build-windows
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: MusicHotkeys-Executable
+        path: release
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/MusicHotkeys.exe
+        generate_release_notes: true
