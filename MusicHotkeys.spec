@@ -17,6 +17,7 @@ a = Analysis(
         'keyboard',
         'pyautogui',
         'flet',
+        'flet_desktop',
         'logging',
         'threading',
         'time',
