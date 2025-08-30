@@ -22,28 +22,6 @@ jobs:
       run: |
         pip install flet pystray pillow keyboard pyautogui
 
-    - name: Create config files
-      run: |
-        # flet.toml
-        echo "[project]" > flet.toml
-        echo 'name = "musichotkeys"' >> flet.toml
-        echo 'version = "1.0.0"' >> flet.toml
-        echo 'dependencies = ["flet", "pystray", "pillow", "keyboard", "pyautogui"]' >> flet.toml
-        echo "" >> flet.toml
-        echo "[tool.flet]" >> flet.toml
-        echo 'product = "MusicHotkeys"' >> flet.toml
-        echo "" >> flet.toml
-        echo "[tool.flet.app]" >> flet.toml
-        echo 'path = "."' >> flet.toml
-        
-        # config.txt
-        echo "next=pageup" > config.txt
-        echo "prev=pagedown" >> config.txt
-        echo "pause=home" >> config.txt
-        echo "mute=end" >> config.txt
-        echo "volume_down=ins" >> config.txt
-        echo "volume_up=del" >> config.txt
-
     - name: Build application
       run: |
         flet build windows
@@ -53,9 +31,9 @@ jobs:
         if (Test-Path "build/windows/runner/Release/MusicHotkeys.exe") {
             New-Item -ItemType Directory -Path "dist" -Force
             Copy-Item -Path "build/windows/runner/Release/MusicHotkeys.exe" -Destination "dist/"
-            Write-Output "✅ Build successful"
+            Write-Output " Build successful"
         } else {
-            Write-Output "❌ Build failed"
+            Write-Output " Build failed"
             exit 1
         }
 
@@ -64,3 +42,4 @@ jobs:
       with:
         name: MusicHotkeys
         path: dist/MusicHotkeys.exe
+
