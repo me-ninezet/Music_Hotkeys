@@ -45,29 +45,44 @@ jobs:
         $env:PYTHONIOENCODING = "utf-8"
         flet build windows --verbose 2>&1 | Write-Output
 
-    - name: Check build result
+    - name: Find and prepare executable
       run: |
-        # Проверяем различные возможные пути
+        Write-Output "✅ Flet build completed successfully!"
+        Write-Output "Searching for executable..."
+        
+        # Проверяем различные возможные пути где flet мог создать файл
         $possiblePaths = @(
-            "build/windows/runner/Release/MusicHotkeys.exe",
-            "build/MusicHotkeys.exe",
-            "MusicHotkeys.exe"
+            "build\windows\runner\Release\MusicHotkeys.exe",
+            "build\windows\MusicHotkeys.exe", 
+            "build\MusicHotkeys.exe",
+            "MusicHotkeys.exe",
+            "build\windows\*\*.exe",
+            "build\*\*.exe"
         )
         
         $found = $false
         foreach ($path in $possiblePaths) {
             if (Test-Path $path) {
-                Write-Output "✅ Found executable: $path"
-                $size = (Get-Item $path).Length / 1MB
-                Write-Output "Size: $([math]::Round($size, 2)) MB"
+                $exeFile = Get-Item $path
+                Write-Output "🎉 Found executable: $($exeFile.FullName)"
+                Write-Output "Size: $([math]::Round($exeFile.Length / 1MB, 2)) MB"
+                
+                # Создаем папку dist и копируем туда
+                New-Item -ItemType Directory -Path "dist" -Force
+                Copy-Item -Path $exeFile.FullName -Destination "dist/MusicHotkeys.exe"
                 $found = $true
                 break
             }
         }
         
         if (-not $found) {
-            Write-Output "❌ Executable not found. Directory contents:"
-            Get-ChildItem -Recurse | Format-Table Name, Length
+            Write-Output "❌ Executable not found in common paths. Full directory structure:"
+            Write-Output "=== build directory ==="
+            if (Test-Path "build") {
+                Get-ChildItem -Path "build" -Recurse | Format-Table FullName, Length
+            }
+            Write-Output "=== root directory ==="
+            Get-ChildItem -Filter "*.exe" -Recurse | Format-Table FullName, Length
             exit 1
         }
 
@@ -76,3 +91,4 @@ jobs:
       with:
         name: MusicHotkeys
         path: build/windows/runner/Release/MusicHotkeys.exe
+
