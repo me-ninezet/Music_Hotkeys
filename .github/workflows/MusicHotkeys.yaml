@@ -23,86 +23,60 @@ jobs:
         python -m pip install --upgrade pip
         pip install flet pystray pillow keyboard pyautogui
 
-    - name: Create config files with proper encoding
+    - name: Create config files
       run: |
-        # Создаем config.txt с UTF-8 encoding
-        $configContent = @"
-next=pageup
-prev=pagedown
-pause=home
-mute=end
-volume_down=ins
-volume_up=del
-"@
-        [System.IO.File]::WriteAllText("config.txt", $configContent, [System.Text.Encoding]::UTF8)
+        # Создаем config.txt
+        "next=pageup" | Out-File -Encoding utf8 config.txt
+        "prev=pagedown" | Out-File -Encoding utf8 -Append config.txt
+        "pause=home" | Out-File -Encoding utf8 -Append config.txt
+        "mute=end" | Out-File -Encoding utf8 -Append config.txt
+        "volume_down=ins" | Out-File -Encoding utf8 -Append config.txt
+        "volume_up=del" | Out-File -Encoding utf8 -Append config.txt
 
-        # Создаем flet.toml с UTF-8 encoding
-        $tomlContent = @"
-[project]
-name = "musichotkeys"
-version = "1.0.0"
-dependencies = ["flet", "pystray", "pillow", "keyboard", "pyautogui"]
+        # Создаем flet.toml
+        "[project]" | Out-File -Encoding utf8 flet.toml
+        "name = `"musichotkeys`"" | Out-File -Encoding utf8 -Append flet.toml
+        "version = `"1.0.0`"" | Out-File -Encoding utf8 -Append flet.toml
+        "dependencies = [`"flet`", `"pystray`", `"pillow`", `"keyboard`", `"pyautogui`"]" | Out-File -Encoding utf8 -Append flet.toml
+        "" | Out-File -Encoding utf8 -Append flet.toml
+        "[tool.flet]" | Out-File -Encoding utf8 -Append flet.toml
+        "product = `"MusicHotkeys`"" | Out-File -Encoding utf8 -Append flet.toml
+        "" | Out-File -Encoding utf8 -Append flet.toml
+        "[tool.flet.app]" | Out-File -Encoding utf8 -Append flet.toml
+        "path = `".`"" | Out-File -Encoding utf8 -Append flet.toml
 
-[tool.flet]
-product = "MusicHotkeys"
-
-[tool.flet.app]
-path = "."
-"@
-        [System.IO.File]::WriteAllText("flet.toml", $tomlContent, [System.Text.Encoding]::UTF8)
-
-    - name: Verify files were created
+    - name: Verify files
       run: |
+        Write-Output "Checking created files:"
         if (Test-Path "config.txt") {
-            Write-Output "✅ config.txt created successfully"
-            Get-Content "config.txt" -Encoding UTF8
+            Write-Output "✅ config.txt exists"
+            Get-Content "config.txt"
         } else {
-            Write-Output "❌ config.txt not found"
+            Write-Output "❌ config.txt missing"
             exit 1
         }
         
         if (Test-Path "flet.toml") {
-            Write-Output "✅ flet.toml created successfully"
-            Get-Content "flet.toml" -Encoding UTF8
+            Write-Output "✅ flet.toml exists"
+            Get-Content "flet.toml"
         } else {
-            Write-Output "❌ flet.toml not found"
+            Write-Output "❌ flet.toml missing"
             exit 1
         }
 
     - name: Build with Flet
       run: |
-        # Устанавливаем UTF-8 кодировку для всего процесса
-        $env:PYTHONIOENCODING = "utf-8"
-        $env:PYTHONUTF8 = "1"
         flet build windows
 
     - name: Check build result
       run: |
-        # Проверяем различные возможные пути к исполняемому файлу
-        $possiblePaths = @(
-            "build/windows/runner/Release/MusicHotkeys.exe",
-            "build/MusicHotkeys.exe", 
-            "MusicHotkeys.exe"
-        )
-        
-        $found = $false
-        foreach ($path in $possiblePaths) {
-            if (Test-Path $path) {
-                Write-Output "✅ Found executable: $path"
-                $size = (Get-Item $path).Length / 1MB
-                Write-Output "Size: $([math]::Round($size, 2)) MB"
-                
-                # Создаем папку dist и копируем туда
-                New-Item -ItemType Directory -Path "dist" -Force
-                Copy-Item -Path $path -Destination "dist/MusicHotkeys.exe"
-                $found = $true
-                break
-            }
-        }
-        
-        if (-not $found) {
-            Write-Output "❌ Executable not found. Directory contents:"
-            Get-ChildItem -Recurse | Format-Table Name, Length
+        if (Test-Path "build/windows/runner/Release/MusicHotkeys.exe") {
+            Write-Output "✅ Build successful!"
+            $size = (Get-Item "build/windows/runner/Release/MusicHotkeys.exe").Length / 1MB
+            Write-Output "Executable size: $([math]::Round($size, 2)) MB"
+        } else {
+            Write-Output "❌ Build failed. Directory contents:"
+            Get-ChildItem -Recurse
             exit 1
         }
 
@@ -110,4 +84,4 @@ path = "."
       uses: actions/upload-artifact@v4
       with:
         name: MusicHotkeys
-        path: dist/MusicHotkeys.exe
+        path: build/windows/runner/Release/MusicHotkeys.exe
