@@ -16,15 +16,11 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12.2'
+        python-version: '3.10'
 
-    - name: Install Flet
+    - name: Install latest Flet
       run: |
-        pip install flet --upgrade
-
-    - name: Install other dependencies
-      run: |
-        pip install pystray pillow keyboard pyautogui
+        pip install "flet>=0.28.0" pystray pillow keyboard pyautogui
 
     - name: Create default config
       run: |
@@ -35,23 +31,22 @@ jobs:
         echo "volume_down=ins" >> config.txt
         echo "volume_up=del" >> config.txt
 
-    - name: Build with Flet Build
+    - name: Build with correct Flet syntax
       run: |
-        flet build windows --output-dir dist --name MusicHotkeys
+        flet build windows -o dist -n MusicHotkeys
 
-    - name: Check build result
+    - name: Check result
       run: |
         if (Test-Path "dist/MusicHotkeys.exe") {
             $size = (Get-Item "dist/MusicHotkeys.exe").Length
-            Write-Output "✅ Flet build SUCCESS! Size: $($size/1MB) MB"
+            Write-Output "✅ SUCCESS! Size: $($size/1MB) MB"
         } else {
-            Write-Output "❌ Flet build failed, trying alternative..."
-            # Проверим что создалось
+            Write-Output "❌ Checking what was created:"
             Get-ChildItem -Recurse
         }
 
-    - name: Upload executable
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MusicHotkeys-FletBuild
+        name: MusicHotkeys
         path: dist/MusicHotkeys.exe
