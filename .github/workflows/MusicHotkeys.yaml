@@ -33,7 +33,7 @@ jobs:
 
     - name: Build with correct Flet syntax
       run: |
-        flet build windows -o dist -n MusicHotkeys
+        flet build windows --output dist --name MusicHotkeys --product-name "Music Hotkeys" --product-version "1.0.0"
 
     - name: Check result
       run: |
@@ -50,3 +50,4 @@ jobs:
       with:
         name: MusicHotkeys
         path: dist/MusicHotkeys.exe
+
