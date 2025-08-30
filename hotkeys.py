@@ -1,3 +1,4 @@
+import time
 from time import sleep
 from threading import Event
 from pyautogui import press
@@ -16,6 +17,7 @@ default_config = '''next=pageup
     volume_up=del'''
 '''Finding a config path'''
 def get_config_path():
+    logging.INFO("getting path")
     if hasattr(sys, '_MEIPASS'):
         config_path = os.path.join(sys._MEIPASS, "config.txt")
         if not os.path.exists(config_path):
@@ -44,6 +46,7 @@ Config file format (default keys):
 '''
 
 def inic_cfg():
+
     try:
         with open(get_config_path(), "r") as f:
             for line in f:
@@ -157,6 +160,7 @@ class YaMusicControl:
         self.is_running = True
         self._stop_event.clear()
         inic_cfg()
+        time.sleep(0.2)
         self.setup_hotkeys()
         logging.info('Program started')
 

@@ -1,6 +1,6 @@
 import logging
 import flet as ft
-from hotkeys import start_controller, stop_controller
+from hotkeys import start_controller, stop_controller, get_config_path
 from design import design
 from tray_manager import TrayIconManager
 from pathlib import Path
@@ -146,7 +146,7 @@ class MusicApp:
 
         # Initiation cfg
         # inic_cfg()
-
+        get_config_path()
         try:
             # Start media controller
             controller_thread = self.start_controller()
