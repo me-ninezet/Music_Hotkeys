@@ -12,9 +12,11 @@ hotkeys = {}
 def get_config_path():
     if hasattr(sys, '_MEIPASS'):
         config_path = os.path.join(sys._MEIPASS, "config.txt")
+        logging.INFO('Config path finded!!')
     else:
         script_dir = dirname(abspath(__file__))
         config_path = join(script_dir, "config.txt")
+        logging.INFO('Config path NOT finded!!')
         if not abspath(config_path).startswith(abspath(script_dir)):
             logging.error("Invalid config path!")
             return None

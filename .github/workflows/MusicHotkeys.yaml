@@ -1,21 +1,75 @@
-name: Quick Build
+name: Build Windows Executable
 
-on: [workflow_dispatch]  # Только ручной запуск
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
       with:
-        python-version: '3.12.3'
+        fetch-depth: 0
 
-    - run: pip install pyinstaller pystray pillow keyboard pyautogui flet
-    - run: pyinstaller MusicHotkeys.spec --clean --noconfirm
-    - run: dir dist/  # Показываем содержимое папки
-
-    - uses: actions/upload-artifact@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
       with:
-        name: Build-Output
-        path: dist/
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller pystray pillow keyboard pyautogui flet
+
+    - name: Create config.txt if not exists (для тестирования)
+      run: |
+        if (-not (Test-Path config.txt)) {
+            Write-Output "Creating default config.txt for testing"
+            Set-Content -Path config.txt -Value "# Default configuration`nhotkey1=ctrl+alt+1`nhotkey2=ctrl+alt+2"
+        }
+
+    - name: Verify resources exist
+      run: |
+        Write-Output "Checking required files:"
+        Get-ChildItem -Recurse -File | ForEach-Object { Write-Output "  - $($_.Name)" }
+        if (-not (Test-Path config.txt)) { Write-Output "❌ config.txt not found!"; exit 1 }
+        if (-not (Test-Path flet_resources)) { Write-Output "❌ flet_resources folder not found!"; exit 1 }
+
+    - name: Build with PyInstaller (debug mode)
+      run: |
+        # Сначала соберем с консолью для отладки
+        pyinstaller MusicHotkeys.spec --clean --noconfirm --debug=all
+
+    - name: Test the executable
+      run: |
+        $exePath = "dist/MusicHotkeys.exe"
+        if (Test-Path $exePath) {
+            Write-Output "✅ Executable created, testing..."
+            # Запускаем с таймаутом для проверки ошибок
+            $process = Start-Process -FilePath $exePath -Wait -PassThru -NoNewWindow
+            Write-Output "Exit code: $($process.ExitCode)"
+        } else {
+            Write-Output "❌ Executable not found!"
+            exit 1
+        }
+
+    - name: Build final version (without console)
+      run: |
+        # Меняем консоль на False в spec файле временно
+        (Get-Content MusicHotkeys.spec) -replace "console=True", "console=False" | Set-Content MusicHotkeys_temp.spec
+        pyinstaller MusicHotkeys_temp.spec --clean --noconfirm
+        Remove-Item MusicHotkeys_temp.spec
+
+    - name: Upload executable artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MusicHotkeys-Executable
+        path: dist/MusicHotkeys.exe
+        if-no-files-found: error
