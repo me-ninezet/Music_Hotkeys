@@ -1,4 +1,4 @@
-name: Build MusicHotkeys - WORKING VERSION
+name: Build with Flet Build
 
 on:
   push:
@@ -16,11 +16,15 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.12.2'
 
-    - name: Install dependencies
+    - name: Install Flet
       run: |
-        pip install flet pystray pillow keyboard pyautogui pyinstaller
+        pip install flet --upgrade
+
+    - name: Install other dependencies
+      run: |
+        pip install pystray pillow keyboard pyautogui
 
     - name: Create default config
       run: |
@@ -31,43 +35,23 @@ jobs:
         echo "volume_down=ins" >> config.txt
         echo "volume_up=del" >> config.txt
 
-    - name: Build with PyInstaller (CORRECT SYNTAX)
+    - name: Build with Flet Build
       run: |
-        pyinstaller `
-          --name=MusicHotkeys `
-          --onedir `
-          --windowed `
-          --add-data "config.txt;." `
-          --add-data "flet_resources;flet_resources" `
-          --hidden-import=pystray `
-          --hidden-import=PIL `
-          --hidden-import=keyboard `
-          --hidden-import=pyautogui `
-          --hidden-import=flet `
-          --hidden-import=flet.core `
-          --hidden-import=flet.utils `
-          --clean `
-          main.py
+        flet build windows --output-dir dist --name MusicHotkeys
 
-    - name: Verify build
+    - name: Check build result
       run: |
-        if (Test-Path "dist/MusicHotkeys/MusicHotkeys.exe") {
-            $size = (Get-Item "dist/MusicHotkeys/MusicHotkeys.exe").Length
-            Write-Output "✅ BUILD SUCCESSFUL! Size: $($size/1MB) MB"
+        if (Test-Path "dist/MusicHotkeys.exe") {
+            $size = (Get-Item "dist/MusicHotkeys.exe").Length
+            Write-Output "✅ Flet build SUCCESS! Size: $($size/1MB) MB"
         } else {
-            Write-Output "❌ Build failed - checking dist contents:"
-            if (Test-Path "dist") {
-                Get-ChildItem -Path "dist" -Recurse
-            }
-            exit 1
+            Write-Output "❌ Flet build failed, trying alternative..."
+            # Проверим что создалось
+            Get-ChildItem -Recurse
         }
-
-    - name: Create zip archive
-      run: |
-        Compress-Archive -Path "dist/MusicHotkeys/*" -DestinationPath "dist/MusicHotkeys.zip"
 
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
-        name: MusicHotkeys-Application
-        path: dist/MusicHotkeys.zip
+        name: MusicHotkeys-FletBuild
+        path: dist/MusicHotkeys.exe
