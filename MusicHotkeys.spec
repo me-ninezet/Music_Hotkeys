@@ -19,6 +19,8 @@ a = Analysis(
     'flet',
     'flet.core',
     'flet.utils',
+    'flet-desktop',
+    'flet-web',
     'logging',
     'threading',
     'time',

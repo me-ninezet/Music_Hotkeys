@@ -1,41 +1,60 @@
-2025-08-30 10:50:21,601 - INFO - Offline resources: flet_resources
-2025-08-30 10:50:21,601 - INFO - Config created
-2025-08-30 10:50:21,601 - INFO - Hotkeys removed
-2025-08-30 10:50:21,619 - INFO - Trey icon started
-2025-08-30 10:50:21,752 - INFO - GUI Started
-2025-08-30 10:50:21,756 - INFO - Assets path configured: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\flet_resources
-2025-08-30 10:50:21,772 - INFO - Hotkeys setup completed
-2025-08-30 10:50:21,772 - INFO - Program started
-2025-08-30 10:50:21,772 - INFO - Starting up TCP server on localhost:57030
-2025-08-30 10:50:21,779 - INFO - Flet app has started...
-2025-08-30 10:50:21,787 - INFO - App URL: tcp://localhost:57030
-2025-08-30 10:50:21,787 - INFO - Starting Flet View app...
-2025-08-30 10:50:21,788 - INFO - Looking for Flet executable at: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\.venv\Lib\site-packages\flet_desktop\app\flet\flet.exe
-2025-08-30 10:50:21,788 - INFO - Flet View found in: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\.venv\Lib\site-packages\flet_desktop\app\flet\flet.exe
-2025-08-30 10:50:22,128 - INFO - App session started
-2025-08-30 10:50:22,130 - INFO - Offline resources: flet_resources
-2025-08-30 10:50:22,137 - INFO - GUI started
-2025-08-30 10:50:25,825 - INFO - Changing cfg
-2025-08-30 10:50:25,830 - INFO - Stop signal sent
-2025-08-30 10:50:25,888 - INFO - Hotkeys removed
-2025-08-30 10:50:25,888 - INFO - Program stopped
-2025-08-30 10:50:26,030 - INFO - Restarting program
-2025-08-30 10:50:26,030 - INFO - Config created
-2025-08-30 10:50:26,030 - INFO - Hotkeys removed
-2025-08-30 10:50:26,031 - INFO - Hotkeys setup completed
-2025-08-30 10:50:26,031 - INFO - Program started
-2025-08-30 10:50:28,376 - INFO - Changing cfg
-2025-08-30 10:50:28,379 - INFO - Stop signal sent
-2025-08-30 10:50:28,439 - INFO - Hotkeys removed
-2025-08-30 10:50:28,439 - INFO - Program stopped
-2025-08-30 10:50:28,580 - INFO - Restarting program
-2025-08-30 10:50:28,580 - INFO - Config created
-2025-08-30 10:50:28,580 - INFO - Hotkeys removed
-2025-08-30 10:50:28,581 - INFO - Hotkeys setup completed
-2025-08-30 10:50:28,582 - INFO - Program started
-2025-08-30 10:50:30,180 - INFO - Start clean exit
-2025-08-30 10:50:30,180 - INFO - Stop signal sent
-2025-08-30 10:50:30,210 - INFO - Hotkeys removed
-2025-08-30 10:50:30,210 - INFO - Garbage collection completed
-2025-08-30 10:50:30,210 - INFO - Program stopped
-2025-08-30 10:50:30,210 - INFO - App closed
+2025-08-30 15:53:25,949 - INFO - getting path
+2025-08-30 15:53:25,950 - INFO - Config path in script dir: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\config.txt
+2025-08-30 15:53:25,950 - INFO - Loading config from: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\config.txt
+2025-08-30 15:53:25,950 - INFO - getting path
+2025-08-30 15:53:25,950 - INFO - Config path in script dir: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\config.txt
+2025-08-30 15:53:25,951 - INFO - Config created
+2025-08-30 15:53:25,951 - INFO - creating default cfg
+2025-08-30 15:53:25,952 - INFO - getting path
+2025-08-30 15:53:25,952 - INFO - Offline resources: flet_resources
+2025-08-30 15:53:25,952 - INFO - Config path in script dir: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\config.txt
+2025-08-30 15:53:25,952 - INFO - getting path
+2025-08-30 15:53:25,952 - INFO - Config path in script dir: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\config.txt
+2025-08-30 15:53:25,952 - INFO - Loading config from: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\config.txt
+2025-08-30 15:53:25,952 - INFO - getting path
+2025-08-30 15:53:25,952 - INFO - Config path in script dir: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\config.txt
+2025-08-30 15:53:25,952 - INFO - Config created
+2025-08-30 15:53:25,974 - INFO - Trey icon started
+2025-08-30 15:53:26,104 - INFO - GUI Started
+2025-08-30 15:53:26,109 - INFO - Assets path configured: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\flet_resources
+2025-08-30 15:53:26,114 - INFO - Starting up TCP server on localhost:3009
+2025-08-30 15:53:26,124 - INFO - Flet app has started...
+2025-08-30 15:53:26,134 - INFO - App URL: tcp://localhost:3009
+2025-08-30 15:53:26,134 - INFO - Starting Flet View app...
+2025-08-30 15:53:26,135 - INFO - Looking for Flet executable at: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\.venv\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2025-08-30 15:53:26,135 - INFO - Flet View found in: C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\.venv\Lib\site-packages\flet_desktop\app\flet\flet.exe
+2025-08-30 15:53:26,153 - INFO - Hotkeys removed
+2025-08-30 15:53:26,263 - INFO - Hotkeys setup completed
+2025-08-30 15:53:26,263 - INFO - Program started
+2025-08-30 15:53:26,490 - INFO - App session started
+2025-08-30 15:53:26,491 - INFO - Offline resources: flet_resources
+2025-08-30 15:53:26,495 - INFO - GUI started
+2025-08-30 15:53:34,138 - INFO - Clean exit from app...
+2025-08-30 15:53:34,139 - INFO - Start clean exit
+2025-08-30 15:53:34,139 - INFO - Stop signal sent
+2025-08-30 15:53:34,165 - INFO - Garbage collection completed
+2025-08-30 15:53:34,165 - INFO - App closed
+2025-08-30 15:53:34,166 - ERROR - An error occurred when calling message handler
+Traceback (most recent call last):
+  File "C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\.venv\Lib\site-packages\pystray\_win32.py", line 412, in _dispatcher
+    return int(icon._message_handlers.get(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\.venv\Lib\site-packages\pystray\_win32.py", line 224, in _on_notify
+    descriptors[index - 1](self)
+  File "C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\.venv\Lib\site-packages\pystray\_base.py", line 328, in inner
+    callback(self)
+  File "C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\.venv\Lib\site-packages\pystray\_base.py", line 453, in __call__
+    return self._action(icon, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\tray_manager.py", line 53, in on_exit
+    self.app.clean_exit()
+  File "C:\Users\shmel\PycharmProjects\yandex-music-hotkeys\main.py", line 189, in clean_exit
+    sys.exit(0)  # Forced exit
+    ^^^^^^^^^^^
+SystemExit: 0
+2025-08-30 15:53:34,195 - INFO - Hotkeys removed
+2025-08-30 15:53:34,196 - INFO - Program stopped
+2025-08-30 16:02:40,253 - INFO - Start clean exit
+2025-08-30 16:02:40,253 - INFO - Stop signal sent
+2025-08-30 16:02:40,279 - INFO - Garbage collection completed
+2025-08-30 16:02:40,280 - INFO - App closed

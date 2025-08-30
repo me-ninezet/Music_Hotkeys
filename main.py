@@ -1,5 +1,7 @@
 import logging
 import flet as ft
+from PyInstaller.utils.win32.winresource import get_resources
+
 from hotkeys import start_controller, stop_controller, get_config_path, inic_cfg
 from design import design
 from tray_manager import TrayIconManager
@@ -30,6 +32,15 @@ class MusicApp:
         self.is_running = True
         self.app_started = False
         self.gui_closed = threading.Event()
+
+    def get_resources_path(self):
+        """Получаем правильный путь к ресурсам для Flet Pack"""
+        if hasattr(sys, '_MEIPASS'):
+            # Режим PyInstaller
+            return os.path.join(sys._MEIPASS, "flet_resources")
+        else:
+            # Режим разработки или Flet Pack
+            return "flet_resources"
 
     def setup_offline_mode(self):
         """Setup offline mode for flet"""
@@ -161,7 +172,7 @@ class MusicApp:
             # Start GUI in main thread
             logging.info("GUI Started")
             ft.app(target=self.design_wrapper,
-                   assets_dir=resources_path,
+                   assets_dir=self.get_resources_path,
                    use_color_emoji=False)
 
         except KeyboardInterrupt:
