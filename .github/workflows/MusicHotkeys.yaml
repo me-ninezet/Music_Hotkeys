@@ -16,67 +16,58 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12.3'
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install flet pystray pillow keyboard pyautogui
 
+    - name: Set UTF-8 environment
+      run: |
+        # Устанавливаем UTF-8 кодировку для всего
+        echo "PYTHONIOENCODING=utf-8" >> $env:GITHUB_ENV
+        echo "PYTHONUTF8=1" >> $env:GITHUB_ENV
+        echo "FLEK_NO_EMOJI=1" >> $env:GITHUB_ENV
+
     - name: Create config files
       run: |
         # Создаем config.txt
-        "next=pageup" | Out-File -Encoding utf8 config.txt
-        "prev=pagedown" | Out-File -Encoding utf8 -Append config.txt
-        "pause=home" | Out-File -Encoding utf8 -Append config.txt
-        "mute=end" | Out-File -Encoding utf8 -Append config.txt
-        "volume_down=ins" | Out-File -Encoding utf8 -Append config.txt
-        "volume_up=del" | Out-File -Encoding utf8 -Append config.txt
-
-        # Создаем flet.toml
-        "[project]" | Out-File -Encoding utf8 flet.toml
-        "name = `"musichotkeys`"" | Out-File -Encoding utf8 -Append flet.toml
-        "version = `"1.0.0`"" | Out-File -Encoding utf8 -Append flet.toml
-        "dependencies = [`"flet`", `"pystray`", `"pillow`", `"keyboard`", `"pyautogui`"]" | Out-File -Encoding utf8 -Append flet.toml
-        "" | Out-File -Encoding utf8 -Append flet.toml
-        "[tool.flet]" | Out-File -Encoding utf8 -Append flet.toml
-        "product = `"MusicHotkeys`"" | Out-File -Encoding utf8 -Append flet.toml
-        "" | Out-File -Encoding utf8 -Append flet.toml
-        "[tool.flet.app]" | Out-File -Encoding utf8 -Append flet.toml
-        "path = `".`"" | Out-File -Encoding utf8 -Append flet.toml
-
-    - name: Verify files
-      run: |
-        Write-Output "Checking created files:"
-        if (Test-Path "config.txt") {
-            Write-Output " config.txt exists"
-            Get-Content "config.txt"
-        } else {
-            Write-Output " config.txt missing"
-            exit 1
-        }
+        @("next=pageup", "prev=pagedown", "pause=home", "mute=end", "volume_down=ins", "volume_up=del") | Out-File -Encoding utf8 config.txt
         
-        if (Test-Path "flet.toml") {
-            Write-Output " flet.toml exists"
-            Get-Content "flet.toml"
-        } else {
-            Write-Output " flet.toml missing"
-            exit 1
-        }
+        # Создаем flet.toml
+        @('[project]', 'name = "musichotkeys"', 'version = "1.0.0"', 'dependencies = ["flet", "pystray", "pillow", "keyboard", "pyautogui"]', '', '[tool.flet]', 'product = "MusicHotkeys"', '', '[tool.flet.app]', 'path = "."') | Out-File -Encoding utf8 flet.toml
 
-    - name: Build with Flet
+    - name: Build with disabled rich output
       run: |
-        flet build windows
+        # Отключаем богатый вывод чтобы избежать ошибок Unicode
+        $env:TERM = "dumb"
+        $env:PYTHONIOENCODING = "utf-8"
+        flet build windows --verbose 2>&1 | Write-Output
 
     - name: Check build result
       run: |
-        if (Test-Path "build/windows/runner/Release/MusicHotkeys.exe") {
-            Write-Output " Build successful!"
-            $size = (Get-Item "build/windows/runner/Release/MusicHotkeys.exe").Length / 1MB
-            Write-Output "Executable size: $([math]::Round($size, 2)) MB"
-        } else {
-            Write-Output " Build failed. Directory contents:"
-            Get-ChildItem -Recurse
+        # Проверяем различные возможные пути
+        $possiblePaths = @(
+            "build/windows/runner/Release/MusicHotkeys.exe",
+            "build/MusicHotkeys.exe",
+            "MusicHotkeys.exe"
+        )
+        
+        $found = $false
+        foreach ($path in $possiblePaths) {
+            if (Test-Path $path) {
+                Write-Output "✅ Found executable: $path"
+                $size = (Get-Item $path).Length / 1MB
+                Write-Output "Size: $([math]::Round($size, 2)) MB"
+                $found = $true
+                break
+            }
+        }
+        
+        if (-not $found) {
+            Write-Output "❌ Executable not found. Directory contents:"
+            Get-ChildItem -Recurse | Format-Table Name, Length
             exit 1
         }
 
@@ -85,4 +76,3 @@ jobs:
       with:
         name: MusicHotkeys
         path: build/windows/runner/Release/MusicHotkeys.exe
-
