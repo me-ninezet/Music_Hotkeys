@@ -51,4 +51,5 @@ jobs:
       with:
         name: MusicHotkeys-Executable
         path: dist/MusicHotkeys.exe
+
         if-no-files-found: error
