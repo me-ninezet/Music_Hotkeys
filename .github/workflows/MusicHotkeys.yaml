@@ -1,4 +1,4 @@
-name: Build with Flet TOML
+name: Build MusicHotkeys
 
 on:
   push:
@@ -13,39 +13,30 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python 3.10
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
-    - name: Create proper flet.toml
+    - name: Install dependencies
       run: |
-        @'
-[project]
-name = "musichotkeys"
-version = "1.0.0"
-description = "Music Hotkeys Controller"
-requires-python = ">=3.9"
-dependencies = [
-    "flet",
-    "pystray",
-    "pillow",
-    "keyboard",
-    "pyautogui"
-]
+        pip install flet pystray pillow keyboard pyautogui
 
-[tool.flet]
-org = "com.musichotkeys"
-product = "MusicHotkeys"
-company = "Music Hotkeys"
-copyright = "Copyright (C) 2025"
-
-[tool.flet.app]
-path = "."
-'@ | Out-File -Encoding utf8 flet.toml
-
-    - name: Create default config
+    - name: Create config files
       run: |
+        # flet.toml
+        echo "[project]" > flet.toml
+        echo 'name = "musichotkeys"' >> flet.toml
+        echo 'version = "1.0.0"' >> flet.toml
+        echo 'dependencies = ["flet", "pystray", "pillow", "keyboard", "pyautogui"]' >> flet.toml
+        echo "" >> flet.toml
+        echo "[tool.flet]" >> flet.toml
+        echo 'product = "MusicHotkeys"' >> flet.toml
+        echo "" >> flet.toml
+        echo "[tool.flet.app]" >> flet.toml
+        echo 'path = "."' >> flet.toml
+        
+        # config.txt
         echo "next=pageup" > config.txt
         echo "prev=pagedown" >> config.txt
         echo "pause=home" >> config.txt
@@ -53,33 +44,23 @@ path = "."
         echo "volume_down=ins" >> config.txt
         echo "volume_up=del" >> config.txt
 
-    - name: Install dependencies from toml
-      run: |
-        pip install flet pystray pillow keyboard pyautogui
-
-    - name: Build with Flet
+    - name: Build application
       run: |
         flet build windows
 
-    - name: Check result
+    - name: Prepare artifact
       run: |
-        # Flet обычно создает папку с именем продукта
         if (Test-Path "build/windows/runner/Release/MusicHotkeys.exe") {
-            $exePath = "build/windows/runner/Release/MusicHotkeys.exe"
-            $size = (Get-Item $exePath).Length
-            Write-Output "✅ SUCCESS! Executable: $exePath"
-            Write-Output "Size: $($size/1MB) MB"
-            
-            # Копируем в dist для удобства
             New-Item -ItemType Directory -Path "dist" -Force
-            Copy-Item -Path $exePath -Destination "dist/MusicHotkeys.exe"
+            Copy-Item -Path "build/windows/runner/Release/MusicHotkeys.exe" -Destination "dist/"
+            Write-Output "✅ Build successful"
         } else {
-            Write-Output "❌ Checking build directory structure:"
-            Get-ChildItem -Recurse -Filter "*.exe" | ForEach-Object { Write-Output "Found: $($_.FullName)" }
+            Write-Output "❌ Build failed"
+            exit 1
         }
 
-    - name: Upload artifact
+    - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
         name: MusicHotkeys
-        path: dist/
+        path: dist/MusicHotkeys.exe
