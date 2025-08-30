@@ -90,7 +90,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: MusicHotkeys
-        path: dist/
+        path: D:\a\Music_Hotkeys\Music_Hotkeys\build\flutter\build\windows\
+
 
 
 
