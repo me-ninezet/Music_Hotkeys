@@ -24,7 +24,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install pystray pillow keyboard pyautogui
+        pip install pystray pillow keyboard pyautogui pyinstaller
 
     - name: Create default config
       run: |
@@ -60,6 +60,7 @@ jobs:
         name: MusicHotkeys-FletPack
 
         path: dist/MusicHotkeys.exe
+
 
 
 
