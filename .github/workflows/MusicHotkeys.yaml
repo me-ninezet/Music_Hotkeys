@@ -1,4 +1,4 @@
-name: Build with Flet Build
+name: Build with Flet TOML
 
 on:
   push:
@@ -16,11 +16,33 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.12'
 
-    - name: Install latest Flet
+    - name: Create proper flet.toml
       run: |
-        pip install "flet>=0.28.0" pystray pillow keyboard pyautogui
+        @'
+[project]
+name = "musichotkeys"
+version = "1.0.0"
+description = "Music Hotkeys Controller"
+requires-python = ">=3.9"
+dependencies = [
+    "flet",
+    "pystray",
+    "pillow",
+    "keyboard",
+    "pyautogui"
+]
+
+[tool.flet]
+org = "https://github.com/me-ninezet/"
+product = "MusicHotkeys"
+company = "NZT Company"
+copyright = "Copyright (C) 2025 by nzt a.k.a blya budu"
+
+[tool.flet.app]
+path = "."
+'@ | Out-File -Encoding utf8 flet.toml
 
     - name: Create default config
       run: |
@@ -31,23 +53,35 @@ jobs:
         echo "volume_down=ins" >> config.txt
         echo "volume_up=del" >> config.txt
 
-    - name: Build with correct Flet syntax
+    - name: Install dependencies from toml
       run: |
-        flet build windows --output dist --name MusicHotkeys --product-name "Music Hotkeys" --product-version "1.0.0"
+        pip install flet pystray pillow keyboard pyautogui
+
+    - name: Build with Flet
+      run: |
+        flet build windows
 
     - name: Check result
       run: |
-        if (Test-Path "dist/MusicHotkeys.exe") {
-            $size = (Get-Item "dist/MusicHotkeys.exe").Length
-            Write-Output "✅ SUCCESS! Size: $($size/1MB) MB"
+        # Flet обычно создает папку с именем продукта
+        if (Test-Path "build/windows/runner/Release/MusicHotkeys.exe") {
+            $exePath = "build/windows/runner/Release/MusicHotkeys.exe"
+            $size = (Get-Item $exePath).Length
+            Write-Output "✅ SUCCESS! Executable: $exePath"
+            Write-Output "Size: $($size/1MB) MB"
+            
+            # Копируем в dist для удобства
+            New-Item -ItemType Directory -Path "dist" -Force
+            Copy-Item -Path $exePath -Destination "dist/MusicHotkeys.exe"
         } else {
-            Write-Output "❌ Checking what was created:"
-            Get-ChildItem -Recurse
+            Write-Output "❌ Checking build directory structure:"
+            Get-ChildItem -Recurse -Filter "*.exe" | ForEach-Object { Write-Output "Found: $($_.FullName)" }
         }
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: MusicHotkeys
-        path: dist/MusicHotkeys.exe
-
+        path: |
+          dist/
+          build/windows/runner/Release/
