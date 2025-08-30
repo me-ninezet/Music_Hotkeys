@@ -4,7 +4,7 @@ from flet.core.types import MainAxisAlignment
 from hotkeys import hotkeys, inic_cfg, restart_controller, get_config_path
 global_app = None
 
-
+#blabla
 def set_global_app(app):
     """
     Sets the global application instance for cross-module access.
