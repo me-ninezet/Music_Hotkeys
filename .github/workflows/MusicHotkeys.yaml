@@ -44,7 +44,8 @@ jobs:
       with:
         name: MusicHotkeys-FletPack
 
-        path: MusicHotkeys/dist/MusicHotkeys.exe
+        path: Music_Hotkeys/dist/MusicHotkeys.exe
+
 
 
 
