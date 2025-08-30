@@ -20,7 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install flet flet-desktop pystray pillow keyboard pyautogui pyinstaller
+        pip install flet pystray pillow keyboard pyautogui pyinstaller
 
     - name: Create default config
       run: |
@@ -31,11 +31,11 @@ jobs:
         echo "volume_down=ins" >> config.txt
         echo "volume_up=del" >> config.txt
 
-    - name: Build with PyInstaller (ONEDIR - WORKING)
+    - name: Build with PyInstaller (CORRECT SYNTAX)
       run: |
         pyinstaller `
           --name=MusicHotkeys `
-          --onedir `  # ← ИЗМЕНИЛИ на onedir вместо onefile
+          --onedir `
           --windowed `
           --add-data "config.txt;." `
           --add-data "flet_resources;flet_resources" `
@@ -46,7 +46,6 @@ jobs:
           --hidden-import=flet `
           --hidden-import=flet.core `
           --hidden-import=flet.utils `
-          --hidden-import=flet-desktop `
           --clean `
           main.py
 
@@ -54,12 +53,12 @@ jobs:
       run: |
         if (Test-Path "dist/MusicHotkeys/MusicHotkeys.exe") {
             $size = (Get-Item "dist/MusicHotkeys/MusicHotkeys.exe").Length
-            Write-Output "🎉 BUILD SUCCESSFUL! Size: $($size/1MB) MB"
-            Write-Output "📁 Folder structure:"
-            Get-ChildItem -Path "dist/MusicHotkeys" -Recurse | ForEach-Object { Write-Output "  - $($_.Name)" }
+            Write-Output "✅ BUILD SUCCESSFUL! Size: $($size/1MB) MB"
         } else {
-            Write-Output "❌ Build failed"
-            Get-ChildItem -Recurse
+            Write-Output "❌ Build failed - checking dist contents:"
+            if (Test-Path "dist") {
+                Get-ChildItem -Path "dist" -Recurse
+            }
             exit 1
         }
 
@@ -70,6 +69,5 @@ jobs:
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:
-        name: MusicHotkeys-Folder
+        name: MusicHotkeys-Application
         path: dist/MusicHotkeys.zip
-
