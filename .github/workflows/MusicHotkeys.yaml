@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12'
+        python-version: '3.10'
 
     - name: Create proper flet.toml
       run: |
@@ -35,10 +35,10 @@ dependencies = [
 ]
 
 [tool.flet]
-org = "https://github.com/me-ninezet/"
+org = "com.musichotkeys"
 product = "MusicHotkeys"
-company = "NZT Company"
-copyright = "Copyright (C) 2025 by nzt a.k.a blya budu"
+company = "Music Hotkeys"
+copyright = "Copyright (C) 2025"
 
 [tool.flet.app]
 path = "."
@@ -82,6 +82,4 @@ path = "."
       uses: actions/upload-artifact@v4
       with:
         name: MusicHotkeys
-        path: |
-          dist/
-          build/windows/runner/Release/
+        path: dist/
