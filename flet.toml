@@ -1,0 +1,21 @@
+[project]
+name = "musichotkeys"
+version = "1.0.0"
+description = "Music Hotkeys Controller"
+requires-python = ">=3.12"
+dependencies = [
+    "flet",
+    "pystray",
+    "pillow",
+    "keyboard",
+    "pyautogui"
+]
+
+[tool.flet]
+org = "https://github.com/me-ninezet/"
+product = "MusicHotkeys"
+company = "NZT Company"
+copyright = "Copyright (C) 2025 by nzt a.k.a blya budu"
+
+[tool.flet.app]
+path = "."
