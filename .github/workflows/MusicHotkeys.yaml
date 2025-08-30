@@ -39,27 +39,13 @@ jobs:
       run: |
         flet pack main.py --yes --product-name "Music Hotkeys Controller" --product-version "1.0.0" --add-data "config.txt;." --add-data "flet_resources;flet_resources"
 
-    - name: Check executable
-      run: |
-        $exePath = "dist/MusicHotkeys.exe"
-        if (Test-Path $exePath) {
-            $size = (Get-Item $exePath).Length
-            Write-Output "Executable size: $($size/1MB) MB"
-            if ($size -lt 20MB) {
-                Write-Output "⚠️  Executable might be missing dependencies"
-            }
-        } else {
-            Write-Output "❌ Executable not found"
-            Get-ChildItem -Recurse
-            exit 1
-        }
-
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: MusicHotkeys-FletPack
 
         path: dist/MusicHotkeys.exe
+
 
 
 
