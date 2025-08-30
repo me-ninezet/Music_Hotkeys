@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.12.3'
 
     - name: Install dependencies
       run: |
@@ -49,18 +49,18 @@ jobs:
       run: |
         Write-Output "Checking created files:"
         if (Test-Path "config.txt") {
-            Write-Output "✅ config.txt exists"
+            Write-Output " config.txt exists"
             Get-Content "config.txt"
         } else {
-            Write-Output "❌ config.txt missing"
+            Write-Output " config.txt missing"
             exit 1
         }
         
         if (Test-Path "flet.toml") {
-            Write-Output "✅ flet.toml exists"
+            Write-Output " flet.toml exists"
             Get-Content "flet.toml"
         } else {
-            Write-Output "❌ flet.toml missing"
+            Write-Output " flet.toml missing"
             exit 1
         }
 
@@ -71,11 +71,11 @@ jobs:
     - name: Check build result
       run: |
         if (Test-Path "build/windows/runner/Release/MusicHotkeys.exe") {
-            Write-Output "✅ Build successful!"
+            Write-Output " Build successful!"
             $size = (Get-Item "build/windows/runner/Release/MusicHotkeys.exe").Length / 1MB
             Write-Output "Executable size: $([math]::Round($size, 2)) MB"
         } else {
-            Write-Output "❌ Build failed. Directory contents:"
+            Write-Output " Build failed. Directory contents:"
             Get-ChildItem -Recurse
             exit 1
         }
@@ -85,3 +85,4 @@ jobs:
       with:
         name: MusicHotkeys
         path: build/windows/runner/Release/MusicHotkeys.exe
+
