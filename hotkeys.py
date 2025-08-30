@@ -15,14 +15,24 @@ default_config = '''next=pageup
     mute=end
     volume_down=ins
     volume_up=del'''
+
+def create_cfg_if_not_exist():
+    try:
+        logging.info('creating default cfg')
+        if hasattr(sys, '_MEIPASS'):
+            config_path = os.path.join(sys._MEIPASS, "config.txt")
+            if not os.path.exists(config_path):
+                with open(config_path, 'w', encoding='utf-8') as f:
+                    f.write(default_config)
+    except Exception as ex:
+        logging.error(f'cant create default cfg: {ex}')
+
+
 '''Finding a config path'''
 def get_config_path():
     logging.INFO("getting path")
     if hasattr(sys, '_MEIPASS'):
         config_path = os.path.join(sys._MEIPASS, "config.txt")
-        if not os.path.exists(config_path):
-            with open(config_path, 'w', encoding='utf-8') as f:
-                f.write(default_config)
         logging.INFO('Config path finded!!')
     else:
         script_dir = dirname(abspath(__file__))
@@ -159,6 +169,7 @@ class YaMusicControl:
 
         self.is_running = True
         self._stop_event.clear()
+        create_cfg_if_not_exist()
         inic_cfg()
         time.sleep(0.2)
         self.setup_hotkeys()

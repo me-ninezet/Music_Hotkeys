@@ -146,7 +146,7 @@ class MusicApp:
 
         # Initiation cfg
         # inic_cfg()
-        get_config_path()
+
         try:
             # Start media controller
             controller_thread = self.start_controller()
