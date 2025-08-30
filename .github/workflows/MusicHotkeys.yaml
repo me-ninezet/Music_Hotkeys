@@ -38,10 +38,10 @@ jobs:
     - name: Build with Flet Pack
       run: |
         flet pack main.py ^
-          --product-name "Music Hotkeys Controller" ^
-          --product-version "1.0.0" ^
-          --add-data "config.txt;." ^
-          --add-data "flet_resources;flet_resources"
+          -- product-name "Music Hotkeys Controller" ^
+          -- product-version "1.0.0" ^
+          -- add-data "config.txt;." ^
+          -- add-data "flet_resources;flet_resources"
 
     - name: Check executable
       run: |
@@ -64,4 +64,5 @@ jobs:
         name: MusicHotkeys-FletPack
 
         path: dist/MusicHotkeys.exe
+
 
