@@ -9,6 +9,7 @@ a = Analysis(
     datas=[
     ('config.txt', '.'),
     ('flet_resources', 'flet_resources'),
+    ('flet_desktop', 'flet_desktop')
     ],
 
     hiddenimports=[
