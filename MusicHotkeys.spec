@@ -29,6 +29,7 @@ a = Analysis(
     'gc',
     'pathlib',
     'pycaw',
+    'pycaw.pycaw'
     'comtypes',
     'ctypes',
     'psutil'
