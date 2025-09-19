@@ -2,7 +2,7 @@ import logging
 import flet as ft
 
 
-from hotkeys import start_controller, stop_controller, get_config_path, inic_cfg
+from hotkeys import start_controller, stop_controller, get_config_path, inic_cfg, app_controller
 from design import design
 from tray_manager import TrayIconManager
 from pathlib import Path
@@ -160,6 +160,8 @@ class MusicApp:
 
         try:
             # Start media controller
+            if not app_controller._find_session():
+                logging.warning("Session not founded")
             inic_cfg()
             controller_thread = self.start_controller()
             resources_path = self.setup_offline_mode()

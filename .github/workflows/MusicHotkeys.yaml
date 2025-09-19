@@ -1,8 +1,8 @@
-name: Build with Flet Build
+name: Build Windows Executable
 
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
@@ -18,12 +18,14 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install latest Flet
+    - name: Install dependencies
       run: |
-        pip install "flet>=0.28.0" pystray pillow keyboard pyautogui
+        python -m pip install --upgrade pip
+        pip install pyinstaller pystray pillow keyboard pyautogui flet
 
     - name: Create default config
       run: |
+        # Создаем дефолтный конфиг
         echo "next=pageup" > config.txt
         echo "prev=pagedown" >> config.txt
         echo "pause=home" >> config.txt
@@ -31,23 +33,12 @@ jobs:
         echo "volume_down=ins" >> config.txt
         echo "volume_up=del" >> config.txt
 
-    - name: Build with correct Flet syntax
+    - name: Build with PyInstaller
       run: |
-        flet build windows --output dist --name MusicHotkeys --product-name "Music Hotkeys" --product-version "1.0.0"
+        pyinstaller MusicHotkeys.spec --clean --noconfirm
 
-    - name: Check result
-      run: |
-        if (Test-Path "dist/MusicHotkeys.exe") {
-            $size = (Get-Item "dist/MusicHotkeys.exe").Length
-            Write-Output "✅ SUCCESS! Size: $($size/1MB) MB"
-        } else {
-            Write-Output "❌ Checking what was created:"
-            Get-ChildItem -Recurse
-        }
-
-    - name: Upload artifact
+    - name: Upload executable artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MusicHotkeys
-        path: dist/MusicHotkeys.exe
-
+        name: MusicHotkeys-Executable
+        path: dist/

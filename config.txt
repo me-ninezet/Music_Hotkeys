@@ -1,7 +1,7 @@
 next=/
 prev=,
 pause=.
-mute=\
-volume_down=Insert
-volume_up=Delete
+mute=O
+volume_down=D
+volume_up=P
 

@@ -1,13 +1,19 @@
 import time
+from app_volume_control import AppVolumeController
 from time import sleep
 from threading import Event
 from pyautogui import press
 from keyboard import add_hotkey, remove_hotkey
 from os.path import dirname, join, abspath
+from pycaw.pycaw import ISimpleAudioVolume
+from comtypes import CLSCTX_ALL
+from ctypes import cast, POINTER
 import logging
 import os
 import sys
 
+app_controller = AppVolumeController("Yandex.Music")
+# app_controller.list_all_audio_sessions()
 hotkeys = {}
 default_config = '''next=pageup
     prev=pagedown
@@ -122,25 +128,51 @@ class YaMusicControl:
 
     def mute_command(self):
         try:
-            # logging.info('Mute')
-            press('volumemute')
-            sleep(0.2)
+            if not app_controller.session:
+                app_controller.refresh_session()
+                if not app_controller.session:
+                    logging.warning("Yandex Music not found")
+                    return
+
+            volume = app_controller.session._ctl.QueryInterface(ISimpleAudioVolume)
+            is_muted = volume.GetMute()
+            volume.SetMute(not is_muted, None)
+            status = "muted" if not is_muted else "unmuted"
+            logging.info(f"Sound {status}")
         except Exception as ex:
-            logging.error(ex)
+            logging.error(f"Mute error: {ex}")
 
     def volumeup_command(self):
         try:
-            # logging.info('Volume+')
-            press('volumeup')
+            if not app_controller.session:
+                app_controller.refresh_session()
+                if not app_controller.session:
+                    logging.warning("Yandex Music not found")
+                    return
+
+            current_volume = app_controller.get_volume()
+            new_volume = min(1.0, current_volume + 0.05)  # Увеличил шаг до 5%
+            app_controller.set_volume(new_volume)
+            logging.info(f"Volume: {int(new_volume * 100)}%")
+            sleep(0.1)
         except Exception as ex:
-            logging.error(ex)
+            logging.error(f"Volume up error: {ex}")
 
     def volumedown_command(self):
         try:
-            # logging.info('Volume-')
-            press('volumedown')
+            if not app_controller.session:
+                app_controller.refresh_session()
+                if not app_controller.session:
+                    logging.warning("Yandex Music not found")
+                    return
+
+            current_volume = app_controller.get_volume()
+            new_volume = max(0.0, current_volume - 0.05)  # Увеличил шаг до 5%
+            app_controller.set_volume(new_volume)
+            logging.info(f"Volume: {int(new_volume * 100)}%")
+            sleep(0.1)
         except Exception as ex:
-            logging.error(ex)
+            logging.error(f"Volume down error: {ex}")
 
     def setup_hotkeys(self):
         self.remove_hotkeys()
