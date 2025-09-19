@@ -27,7 +27,11 @@ a = Analysis(
     'os',
     'sys',
     'gc',
-    'pathlib'
+    'pathlib',
+    'pycaw',
+    'comtypes',
+    'ctypes',
+    'psutil'
     ],
     hookspath=[],
     hooksconfig={},
